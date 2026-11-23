@@ -1,0 +1,3 @@
+{
+ "_ajuda": "Correções manuais, aplicadas por último e nunca sobrescritas pela automação. Chave = ID do compromisso no e-Agendas. Campos opcionais: cats, tem (listas de índices de config/rotulos.json) e lugar (ex.: \"SP:São Paulo\", \"EX:Paris (França)\"). Exemplo: \"36929\": {\"cats\": [3], \"tem\": [0]}"
+}

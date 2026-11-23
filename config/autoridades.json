@@ -1,0 +1,36 @@
+{
+ "ano_inicio_automatico": 2026,
+ "orgao_id": "860",
+ "url_eagendas": "https://eagendas.cgu.gov.br/",
+ "url_viagens": "https://portaldatransparencia.gov.br/download-de-dados/viagens/{ano}",
+ "autoridades": [
+  {
+   "chave": "W",
+   "nome": "Wilson Diniz Wellisch",
+   "nome_curto": "Wilson Wellisch",
+   "servidor_id": "15535",
+   "cargo": "SECRETÁRIO DE RADIODIFUSÃO"
+  },
+  {
+   "chave": "T",
+   "nome": "Tawfic Awwad Junior",
+   "nome_curto": "Tawfic Awwad",
+   "servidor_id": "16422",
+   "cargo": "DIRETOR DO DEPARTAMENTO DE INOVAÇÃO, REGULAMENTAÇÃO E FISCALIZAÇÃO"
+  },
+  {
+   "chave": "D",
+   "nome": "Daniela Naufel Schettino",
+   "nome_curto": "Daniela Schettino",
+   "servidor_id": "16149",
+   "cargo": "DIRETOR DO DEPARTAMENTO DE RADIODIFUSÃO PÚBLICA, COMUNITÁRIA E ESTATAL"
+  },
+  {
+   "chave": "H",
+   "nome": "Whendell Pereira de Souza",
+   "nome_curto": "Whendell Pereira",
+   "servidor_id": "48963",
+   "cargo": "DIRETOR DO DEPARTAMENTO DE RADIODIFUSÃO PRIVADA"
+  }
+ ]
+}

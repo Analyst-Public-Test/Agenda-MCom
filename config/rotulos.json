@@ -1,0 +1,24 @@
+{
+ "cats": [
+  "Ministro",
+  "Anatel",
+  "Governos estrangeiros e organismos",
+  "Associações do setor",
+  "Emissoras de rádio e TV",
+  "Indústria e operadoras",
+  "EBC, Correios e vinculadas",
+  "Parlamento, estados e municípios",
+  "TCU, CGU e Casa Civil"
+ ],
+ "tem": [
+  "TV 3.0",
+  "Brasil Digital",
+  "GAISPI e GIRED (3,5 GHz)",
+  "5G Broadcast",
+  "Outorgas e licitação",
+  "Rádios comunitárias e educativas",
+  "Conselho Fiscal dos Correios",
+  "Siga Antenado e Brasil Antenado",
+  "Faixa de 600 MHz"
+ ]
+}
