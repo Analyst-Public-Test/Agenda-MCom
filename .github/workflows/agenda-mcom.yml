@@ -1,0 +1,44 @@
+name: Agenda MCom
+
+on:
+  schedule:
+    - cron: "0 11 * * *"
+    - cron: "0 17 * * *"
+  workflow_dispatch:
+    inputs:
+      reclassificar:
+        description: "Reclassificar todos os compromissos"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agenda-mcom
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependências
+        run: pip install requests openpyxl
+      - name: Atualizar agenda (e-Agendas + Portal da Transparência)
+        run: python scripts/agenda_mcom.py ${{ inputs.reclassificar && '--reclassificar' || '' }}
+      - name: Gravar se houve mudança
+        run: |
+          git config user.name  "agenda-mcom-bot"
+          git config user.email "agenda-mcom-bot@users.noreply.github.com"
+          git add dados/agenda-mcom.json
+          if git diff --cached --quiet; then
+            echo "Sem mudanças."
+          else
+            git commit -m "Agenda MCom: atualização $(date -u +%Y-%m-%d)"
+            git push
+          fi
