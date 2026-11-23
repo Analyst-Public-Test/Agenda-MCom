@@ -11,6 +11,7 @@ Regras
   - Se uma fonte falhar, o que já está no JSON é mantido (nada some por causa de uma falha de rede).
   - Classificação já gravada no JSON não é sobrescrita; config/ajustes.json vence sempre.
   - Compromisso com o mesmo ID (ou mesma data/hora/assunto) em mais de uma agenda vira um registro só, com todas as pessoas.
+  - O JSON só é regravado quando muda o conteúdo OU o estado das fontes (assim o bloco de controle nunca fica desatualizado).
 """
 import argparse, csv, datetime as dt, difflib, hashlib, html, io, json, re, sys, time, unicodedata, zipfile
 from pathlib import Path
@@ -240,12 +241,12 @@ CIDADES = [
 
 
 def decidir_lugar(reg, vgs, pendencias):
-    if reg["virtual"]:
+    if reg["virtual"\]:
         return "VI:Virtual", "V"
     if re.search(DF_FORTE, reg["local"], re.I):
         return "DF:Brasília", "P"
     for v in vgs:
-        if v[2] in reg["pes"] and v[0] <= reg["iso"] <= v[1]:
+        if v[2] in reg["pes"] and v[0] <= reg["iso"] <= v[1\]:
             return v[3], "P"
     for rx, l in CIDADES:
         if re.search(rx, reg["local"] + " " + reg["assunto"], re.I):
@@ -302,6 +303,8 @@ def main():
                     else:
                         regs[r["id"]] = r
                     n += 1
+            if n == 0 and any(k in r[9] for r in antigo_rows):
+                raise RuntimeError("página sem nenhum compromisso (possível falha do site); mantido o que já estava no JSON")
             fontes[k] = {"fonte": "e-Agendas (página)", "ok": True, "compromissos": n}
             log(f"[e-Agendas] {aut['nome']}: {n} compromissos desde {ano0}")
         except Exception as e:  # noqa: BLE001
@@ -358,7 +361,7 @@ def main():
     # ---- 3) mantém o que já existia para autoridades cuja página falhou
     for r in antigo_rows:
         ids = r[12] if len(r) > 12 else []
-        if not (falhou & set(r[9])) or r[0][:4] < str(ano0) or not ids:
+        if not (falhou & set(r[9])) or r[0][:4] < str(ano0or not ids:
             continue
         achou = [i for i in ids if i in regs]
         if achou:  # compromisso compartilhado: a pessoa cuja fonte falhou continua nele
@@ -404,12 +407,17 @@ def main():
                      cats, tem, lugar, pes, "EA", None, g["ids"]])
     rows.sort(key=lambda r: (r[0], r[1]), reverse=True)
 
-    # ---- 6) saída (só regrava se o conteúdo mudou)
+    # ---- 6) saída (regrava se mudou o conteúdo OU o estado das fontes)
     corpo = {"cats": rot["cats"], "tem": rot["tem"], "rows": rows, "vg": vg}
-    h = hashlib.sha256(json.dumps(corpo, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
     ult = {c["chave"]: max([r[0] for r in rows if c["chave"] in r[9]] or [""]) for c in auts}
     meta = {"fontes_eagendas": fontes, "fontes_viagens": fonte_viag, "ultimo_compromisso": ult,
             "pendencias_de_lugar": pendencias}
+    # assinatura do estado das fontes: sem textos de erro (que variam a cada execução)
+    sinal = {
+        "e": {k: [v["ok"], v.get("compromissos")] for k, v in fontes.items()},
+        "v": {y: ["falhou" if "falhou" in x["arquivo"] else x["arquivo"], x["viagens"]] for y, x in fonte_viag.items()},
+    }
+    h = hashlib.sha256(json.dumps([corpo, sinal], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
     if estado.get("hash") == h:
         log("Sem mudanças no conteúdo; JSON não foi alterado.")
     else:
