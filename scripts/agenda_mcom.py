@@ -241,12 +241,12 @@ CIDADES = [
 
 
 def decidir_lugar(reg, vgs, pendencias):
-    if reg["virtual"\]:
+    if reg["virtual"]:
         return "VI:Virtual", "V"
     if re.search(DF_FORTE, reg["local"], re.I):
         return "DF:Brasília", "P"
     for v in vgs:
-        if v[2] in reg["pes"] and v[0] <= reg["iso"] <= v[1\]:
+        if v[2] in reg["pes"] and v[0] <= reg["iso"] <= v[1]:
             return v[3], "P"
     for rx, l in CIDADES:
         if re.search(rx, reg["local"] + " " + reg["assunto"], re.I):
@@ -361,7 +361,7 @@ def main():
     # ---- 3) mantém o que já existia para autoridades cuja página falhou
     for r in antigo_rows:
         ids = r[12] if len(r) > 12 else []
-        if not (falhou & set(r[9])) or r[0][:4] < str(ano0or not ids:
+        if not (falhou & set(r[9])) or r[0][:4] < str(ano0) or not ids:
             continue
         achou = [i for i in ids if i in regs]
         if achou:  # compromisso compartilhado: a pessoa cuja fonte falhou continua nele
